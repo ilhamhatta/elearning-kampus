@@ -21,6 +21,38 @@ DB_PASSWORD=
 
 Untuk testing endpoint API nya bapak/ibu bisa gunakan file Online Programmer - M Ilham Hatta.postman_collection.json didalam root proyek.
 
+untuk frond-end aplikasi nya belum selesai semua saya buat. tetapi jika bapak/ibu ingin mencoba, bapak/ibu bisa clone atau download zip frond-end nya dari repo saya : https://github.com/ilhamhatta/fe-elearning-kampus
+
+1. setelah clone/extract nya berhasil, jalan kan perintah npm install tunggu hingga selesai. note : selama install jika ada warn biarkan saja. karena saya menggunakan template react milik creative.
+
+2. setelah itu install axios dengan perintah npm install axios.
+
+3. setelah itu buat file src/api/apiClient.js
+
+4. copy code ini di apiClient.js untuk menggunakan api endpoint yang telah di buat :
+
+import axios from "axios";
+
+const apiClient = axios.create({
+baseURL: "http://localhost:8000/api",
+headers: {
+"Content-Type": "application/json",
+},
+});
+
+apiClient.interceptors.request.use((config) => {
+const token = localStorage.getItem("token");
+if (token) {
+config.headers.Authorization = `Bearer ${token}`;
+}
+return config;
+});
+
+export default apiClient;
+
+sesuaikan port local pada file config/cors.php sesuai dengan port yang bapak/ibu gunakan.
+'allowed_origins' => ['http://localhost:3000']
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
