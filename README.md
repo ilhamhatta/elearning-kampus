@@ -23,6 +23,8 @@ Untuk testing endpoint API nya bapak/ibu bisa gunakan file Online Programmer - M
 
 untuk frond-end aplikasi nya belum selesai semua saya buat. tetapi jika bapak/ibu ingin mencoba, bapak/ibu bisa clone atau download zip frond-end nya dari repo saya : https://github.com/ilhamhatta/fe-elearning-kampus
 
+sebelum login, daftar user di endpoint POST /register di postman.
+
 1. setelah clone/extract nya berhasil, jalan kan perintah npm install tunggu hingga selesai. note : selama install jika ada warn biarkan saja. karena saya menggunakan template react milik creative.
 
 2. setelah itu install axios dengan perintah npm install axios.
