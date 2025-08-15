@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "189886ec-f449-4d73-954e-35515f016fd0",
-		"name": "Online Programmer - M Ilham Hatta",
+		"name": "API e-learning",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "42354566",
 		"_collection_link": "https://api-e-learning.postman.co/workspace/API-E-learning-Workspace~3ee95c28-8b35-4613-bb09-a543f6bd6086/collection/42354566-189886ec-f449-4d73-954e-35515f016fd0?action=share&source=collection_link&creator=42354566"
@@ -23,7 +23,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"M Ilham Hatta\",\r\n    \"email\": \"ilhamhatta@example.com\",\r\n    \"password\": \"ilhamexample\",\r\n    \"password_confirmation\": \"ilhamexample\",\r\n    \"role\": \"dosen\"\r\n}",
+							"raw": "{\r\n    \"name\": \"M Ilham Hatta\",\r\n    \"email\": \"ilhamhatta123@dosen.com\",\r\n    \"password\": \"ilhamdosen\",\r\n    \"password_confirmation\": \"ilhamdosen\",\r\n    \"role\": \"dosen\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,7 +52,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Ilham\",\r\n    \"email\": \"testemail@example.com\",\r\n    \"password\": \"testexample\",\r\n    \"password_confirmation\": \"testexample\",\r\n    \"role\": \"mahasiswa\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ilham Hatta Mahasiswa\",\r\n    \"email\": \"testemail@mahasiswa.com\",\r\n    \"password\": \"testmahasiswa\",\r\n    \"password_confirmation\": \"testmahasiswa\",\r\n    \"role\": \"mahasiswa\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +81,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ilhamhatta@example.com\",\r\n    \"password\": \"ilhamexample\"\r\n}",
+							"raw": "{\r\n    \"email\": \"ilhamhatta123@dosen.com\",\r\n    \"password\": \"ilhamdosen\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -205,7 +205,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "3|7ccICpucO5vkafdUGJ2Kw0IsJHTGTSKgqteFg7un49f72fe7",
+									"value": "2|E5QDZPvPnoIj3vr72OVGpPCCqMBAHbqwQXduIhHEeb26055a",
 									"type": "string"
 								}
 							]
@@ -213,7 +213,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/courses/1",
+							"raw": "http://localhost:8000/api/courses/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -222,7 +222,7 @@
 							"path": [
 								"api",
 								"courses",
-								"1"
+								""
 							]
 						}
 					},
@@ -236,7 +236,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "5|mc7RyuNTyN43cMcyLeBRgCDePmYA4HsJhviEuy0l6e78536c",
+									"value": "4|R7iE2ZeybHDQLL0cn6eBMENZ5wJlYuxPXeqfAPQr767f378b",
 									"type": "string"
 								}
 							]
@@ -245,7 +245,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Belajar Pemrogramman Web\",\r\n  \"description\": \"Belajar tentang jenis jenis bahasa pemrogrammman.\"\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"Belajar Pemrogramman Web\",\r\n  \"description\": \"Belajar tentang jenis jenis bahasa pemrograman.\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -459,7 +459,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "5|mc7RyuNTyN43cMcyLeBRgCDePmYA4HsJhviEuy0l6e78536c",
+									"value": "1|WXwuSuvM6aZd6XdUwqlnkIxP132hRpFk3t9qFWx97c54a77d",
 									"type": "string"
 								}
 							]
@@ -468,7 +468,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"course_id\": \"2\",\r\n    \"title\": \"Tugas 2 - Pertemuan Pertama\",\r\n    \"description\": \"Silahkan pahami dan submit sesuai jadwal yang telah ditentukan, tidak menerima keterlambatan.\",\r\n    \"deadline\": \"2025-02-20 23:59:59\"\r\n}",
+							"raw": "{\r\n    \"course_id\": \"1\",\r\n    \"title\": \"Tugas 1 - Pertemuan Pertama (Basis Data)\",\r\n    \"description\": \"Silahkan pahami dan submit sesuai jadwal yang telah ditentukan, tidak menerima keterlambatan.\",\r\n    \"deadline\": \"2025-02-20 23:59:59\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
