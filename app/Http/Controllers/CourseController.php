@@ -11,7 +11,17 @@ class CourseController extends Controller
     // GET /courses -> Semua mata kuliah
     public function index()
     {
-        return response()->json(Course::with('lecturer')->get());
+        $userId = Auth::id();
+
+        $courses = Course::query()
+            ->with(['lecturer:id,name'])
+            // flag enrolled: pakai activeStudents (sudah filter deleted_at) + batasi ke user saat ini
+            ->withExists(['activeStudents as is_enrolled' => fn($q) => $q->where('users.id', $userId)])
+            // hitung peserta aktif
+            ->withCount(['activeStudents as students_count'])
+            ->get();
+
+        return response()->json($courses);
     }
 
     // POST /courses -> Dosen menambahkan mata kuliah
@@ -22,7 +32,6 @@ class CourseController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Hanya dosen yang bisa menambah mata kuliah
         if (Auth::user()->role !== 'dosen') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -46,12 +55,11 @@ class CourseController extends Controller
 
         $course = Course::findOrFail($id);
 
-        // Hanya dosen pemilik mata kuliah yang bisa mengedit
         if (Auth::id() !== $course->lecturer_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $course->update($request->all());
+        $course->update($request->only('name', 'description'));
 
         return response()->json($course);
     }
@@ -61,7 +69,6 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
 
-        // Hanya dosen pemilik mata kuliah yang bisa menghapus
         if (Auth::id() !== $course->lecturer_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -71,24 +78,63 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course deleted']);
     }
 
+    // POST /courses/{id}/enroll -> Mahasiswa mendaftar (support restore pivot soft-deleted)
     public function enroll($id)
     {
         $course = Course::findOrFail($id);
         $user = Auth::user();
 
-        // Hanya mahasiswa yang bisa mendaftar
         if ($user->role !== 'mahasiswa') {
             return response()->json(['message' => 'Only students can enroll'], 403);
         }
 
-        // Cek apakah sudah terdaftar
-        if ($course->students()->where('student_id', $user->id)->exists()) {
+        // Sudah aktif?
+        $isActive = $course->students()
+            ->wherePivot('student_id', $user->id)
+            ->wherePivotNull('deleted_at')
+            ->exists();
+
+        if ($isActive) {
             return response()->json(['message' => 'Already enrolled'], 400);
         }
 
-        // Tambahkan mahasiswa ke mata kuliah
-        $course->students()->attach($user->id);
+        // Pernah terdaftar tapi di-soft delete? → restore
+        $wasSoftDeleted = $course->students()
+            ->wherePivot('student_id', $user->id)
+            ->whereNotNull('course_student.deleted_at')
+            ->exists();
+
+        if ($wasSoftDeleted) {
+            $course->students()->updateExistingPivot($user->id, ['deleted_at' => null]);
+        } else {
+            $course->students()->attach($user->id);
+        }
 
         return response()->json(['message' => 'Enrolled successfully']);
+    }
+
+    // (Opsional) DELETE /courses/{id}/enroll -> Mahasiswa batal/keluar (soft delete pivot)
+    public function unenroll($id)
+    {
+        $course = Course::findOrFail($id);
+        $user = Auth::user();
+
+        if ($user->role !== 'mahasiswa') {
+            return response()->json(['message' => 'Only students can unenroll'], 403);
+        }
+
+        $isActive = $course->students()
+            ->wherePivot('student_id', $user->id)
+            ->wherePivotNull('deleted_at')
+            ->exists();
+
+        if (! $isActive) {
+            return response()->json(['message' => 'Not enrolled'], 400);
+        }
+
+        // soft delete baris pivot
+        $course->students()->updateExistingPivot($user->id, ['deleted_at' => now()]);
+
+        return response()->json(['message' => 'Unenrolled successfully']);
     }
 }

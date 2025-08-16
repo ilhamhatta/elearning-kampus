@@ -25,11 +25,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/courses/{id}', [CourseController::class, 'update']);
     Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
     Route::post('/courses/{id}/enroll', [CourseController::class, 'enroll']);
+    Route::delete('/courses/{id}/enroll', [CourseController::class, 'unenroll']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/materials', [MaterialController::class, 'store']); // Dosen upload materi
     Route::get('/materials/{id}/download', [MaterialController::class, 'download']); // Download materi
+    Route::get('/materials', [MaterialController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
