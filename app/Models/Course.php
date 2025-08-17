@@ -1,16 +1,15 @@
 <?php
 
-// app/Models/Course.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-// use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
     use SoftDeletes;
-    // use HasFactory;
+
+    public const DELETED_AT = 'deleted_at';
 
     protected $fillable = ['name', 'description', 'lecturer_id'];
 
@@ -38,19 +37,25 @@ class Course extends Model
         return $this->hasMany(Discussion::class, 'course_id');
     }
 
+    /**
+     * Semua peserta (termasuk yang sudah di-soft-delete di pivot).
+     * Pivot: course_student(course_id, student_id, timestamps, deleted_at[nullable])
+     */
     public function students()
     {
-        // pastikan tabel pivot: course_student(course_id, student_id)
         return $this->belongsToMany(User::class, 'course_student', 'course_id', 'student_id')
-            ->withTimestamps(); // kalau pivot punya timestamps
+            ->withTimestamps()
+            ->withPivot('deleted_at');
     }
 
-    // app/Models/Course.php
+    /**
+     * Hanya peserta aktif (pivot.deleted_at IS NULL)
+     */
     public function activeStudents()
     {
         return $this->belongsToMany(User::class, 'course_student', 'course_id', 'student_id')
             ->withTimestamps()
             ->withPivot('deleted_at')
-            ->wherePivotNull('deleted_at'); // hanya peserta aktif
+            ->wherePivotNull('deleted_at');
     }
 }

@@ -9,19 +9,28 @@ use Illuminate\Support\Facades\Auth;
 class CourseController extends Controller
 {
     // GET /courses -> Semua mata kuliah
+    // app/Http/Controllers/CourseController.php (hanya index() yang berubah)
     public function index()
     {
-        $userId = Auth::id();
+        $user = Auth::user();
 
-        $courses = Course::query()
+        $q = Course::query()
             ->with(['lecturer:id,name'])
-            // flag enrolled: pakai activeStudents (sudah filter deleted_at) + batasi ke user saat ini
-            ->withExists(['activeStudents as is_enrolled' => fn($q) => $q->where('users.id', $userId)])
-            // hitung peserta aktif
-            ->withCount(['activeStudents as students_count'])
-            ->get();
+            // hitung peserta aktif (pivot non-deleted) via relasi activeStudents
+            ->withCount(['activeStudents as students_count']);
 
-        return response()->json($courses);
+        if ($user->role === 'dosen') {
+            // Dosen hanya melihat kursus miliknya
+            $q->where('lecturer_id', $user->id);
+            // Catatan: untuk dosen, field is_enrolled tidak relevan → tidak perlu ditambahkan
+        } else {
+            // Mahasiswa melihat semua + flag apakah dia terdaftar
+            $q->withExists([
+                'activeStudents as is_enrolled' => fn($sub) => $sub->where('users.id', $user->id),
+            ]);
+        }
+
+        return response()->json($q->get());
     }
 
     // POST /courses -> Dosen menambahkan mata kuliah

@@ -28,11 +28,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/courses/{id}/enroll', [CourseController::class, 'unenroll']);
 });
 
+// routes/api.php
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/materials', [MaterialController::class, 'store']); // Dosen upload materi
-    Route::get('/materials/{id}/download', [MaterialController::class, 'download']); // Download materi
     Route::get('/materials', [MaterialController::class, 'index']);
+
+    Route::middleware('throttle:uploads')
+        ->post('/materials', [MaterialController::class, 'store']);
+
+    Route::middleware('throttle:uploads')
+        ->delete('/materials/{id}', [MaterialController::class, 'destroy']);
+
+    Route::middleware('throttle:downloads')
+        ->get('/materials/{id}/download', [MaterialController::class, 'download']);
 });
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/assignments', [AssignmentController::class, 'store']);
